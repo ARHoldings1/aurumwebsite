@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurum Cryptocurrency</title>
+    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #333333;
+            --background-color: #FFD700;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background-color: var(--primary-color);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        nav ul li {
+            margin: 0 10px;
+        }
+        
+        nav ul li a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .header-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .header-button:hover {
+            background-color: #555;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        #home {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+        
+        #home h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        #home p {
+            font-size: 1.2rem;
+        }
+        
+        #about {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        
+        #about .logo {
+            width: 250px;
+            height: 250px;
+            margin-right: 2rem;
+            flex-shrink: 0;
+        }
+        
+        #about .content {
+            flex: 1;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        
+        #about h2 {
+            margin-top: 0;
+        }
+        
+        #about p {
+            margin-bottom: 0;
+        }
+        
+        button {
+            background-color: var(--secondary-color);
+            border: none;
+            color: var(--primary-color);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #555;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: var(--primary-color);
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border-radius: 5px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+        }
+        
+        .modal-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .modal-button:hover {
+            background-color: #555;
+        }
+        
+        #qrCode, #contractAddress {
+            display: none;
+            margin-top: 1rem;
+        }
+        
+        #qrCode img {
+            width: 250px;
+            height: 250px;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        #contractAddress {
+            word-break: break-all;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 1024px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            nav ul {
+                margin-right: 0;
+            }
+            
+            h1 {
+                font-size: 1rem;
+                margin-top: 0.5rem;
+            }
+            
+            #about {
+                flex-direction: column;
+            }
+            
+            #about .logo {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            #about .content {
+                max-height: none;
+                overflow-y: visible;
+            }
+        }
+        
+        #roadmap {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        #roadmap h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: var(--primary-color);
+            border: 4px solid var(--secondary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .right::after {
+            left: -16px;
+        }
+        
+        .content {
+            padding: 20px 30px;
+            background-color: var(--primary-color);
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .content h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+        }
+        
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 15px;
+            }
+            
+            .left::after, .right::after {
+                left: 15px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .social-icons a {
+            color: var(--secondary-color);
+            font-size: 2rem;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: #555;
+        }
+        
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 1rem;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .modal-button {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../assets/logo.png" alt="Aurum Logo" class="logo">
+            <h1>Aurum - The Gold Backed Crypto Stablecoin from the Baltic Tech Group</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+            </ul>
+            <button id="buyBtn" class="header-button">Buy Aurum</button>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section id="home">
+            <h2>Welcome to Aurum</h2>
+            <p>The future of savings and purchasing is here with Aurum, the gold-backed crypto stablecoin.Introducing Aurum—the first gold-backed cryptocurrency stablecoin from Baltic Tech! With each Aurum token (AUR) backed by real gold reserves, it offers a secure, stable way to invest in digital assets while preserving the timeless value of gold. This is your opportunity to diversify your portfolio and secure your wealth with a cryptocurrency that's as solid as gold itself.
+
+                Priced at just $1.00 per token, you can start investing today with a minimum purchase of 100 tokens. Whether you're looking to save for the future by staking your AUR tokens or want the flexibility to buy gold and jewelry across all Baltic Tech Group-owned stores, Aurum gives you the best of both worlds—real-world value and digital convenience.
+                
+                Don't miss out on this golden opportunity! Buy Aurum tokens today and enjoy the security and liquidity of a gold-backed cryptocurrency.</p>
+        </section>
+
+        <section id="about">
+            <img src="../assets/logo.png" alt="Aurum Logo" class="logo">
+            <div class="content">
+                <h2>About Aurum</h2>
+                <p>Aurum is a groundbreaking gold-backed cryptocurrency stablecoin launched by Baltic Tech, making it the first of its kind in the crypto market. With a liquidity of approximately $7 million USD, Aurum offers a secure and stable investment option, blending the advantages of digital assets with the timeless value of gold. Backed by real gold reserves, Aurum allows users to stake their coins as a digital equivalent to saving gold, providing a modern alternative for wealth preservation. Additionally, Aurum can be used to purchase gold and jewelry across all Baltic Tech Group-owned stores, combining real-world utility with digital convenience.</p>
+            </div>
+        </section>
+
+        <section id="roadmap">
+            <h2>Roadmap</h2>
+            <div class="timeline">
+                <div class="timeline-item left">
+                    <div class="content">
+                        <h3>September 2024</h3>
+                        <p>Private and Public Presale</p>
+                        <p>Launch of the Aurum Wallet</p>
+                        <p>Launch of the Aurum Blockchain (Layer 2 Chain) from the Ethereum Main Net</p>
+                    </div>
+                </div>
+                <div class="timeline-item right">
+                    <div class="content">
+                        <h3>October 2024</h3>
+                        <p>Official Launch of the Aurum Stablecoin</p>
+                    </div>
+                </div>
+                <div class="timeline-item left">
+                    <div class="content">
+                        <h3>November 2024</h3>
+                        <p>ICO for Aurum</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="social-icons">
+            <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-medium"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-discord"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-reddit"></i></a>
+        </div>
+    </div>
+
+    <div id="buyModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="../assets/logo.png" alt="Aurum Logo" class="modal-logo">
+            <h2>Buy Aurum</h2>
+            <p>1 AUR = 1 USD</p>
+            <div class="modal-buttons">
+                <button id="proceedBtn" class="modal-button">Proceed to Buy</button>
+                <button id="contractBtn" class="modal-button">Contract Address</button>
+            </div>
+            <div id="qrCode">
+                <img src="../assets/qrcode.png" alt="Aurum QR Code">
+                <p>Scan this QR code to buy Aurum</p>
+            </div>
+            <div id="contractAddress">
+                <p>0x6E97A67a160Bb259ee31d30908bC27A345BD3eA2</p>
+                <button id="copyBtn" class="modal-button">Copy Address</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; Aurum | 2024 | All Rights Reserved
+    </footer>
+
+    <script>
+        const modal = document.getElementById("buyModal");
+        const btn = document.getElementById("buyBtn");
+        const span = document.getElementsByClassName("close")[0];
+        const proceedBtn = document.getElementById("proceedBtn");
+        const contractBtn = document.getElementById("contractBtn");
+        const qrCode = document.getElementById("qrCode");
+        const contractAddress = document.getElementById("contractAddress");
+        const copyBtn = document.getElementById("copyBtn");
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+            qrCode.style.display = "none";
+            contractAddress.style.display = "none";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        proceedBtn.onclick = function() {
+            qrCode.style.display = "block";
+            contractAddress.style.display = "none";
+        }
+
+        contractBtn.onclick = function() {
+            contractAddress.style.display = "block";
+            qrCode.style.display = "none";
+        }
+
+        copyBtn.onclick = function() {
+            const addressText = "0x6E97A67a160Bb259ee31d30908bC27A345BD3eA2";
+            navigator.clipboard.writeText(addressText).then(function() {
+                alert("Contract address copied to clipboard!");
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
