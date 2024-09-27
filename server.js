@@ -12,16 +12,6 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 
-app.post('/api/store-user-data', (req, res) => {
-    const userData = req.body;
-    // Here, you would typically store the data in your database
-    console.log('Received user data:', userData);
-    
-    // For this example, we're just sending a success response
-    res.status(200).json({ message: 'User data stored successfully' });
-});
-
-
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -43,8 +33,17 @@ function encryptData(data) {
     return iv.toString('hex') + ':' + encrypted;
 }
 
+app.post('/api/store-user-data', (req, res) => {
+    const userData = req.body;
+    // Here, you would typically store the data in your database
+    console.log('Received user data:', userData);
+    
+    // For this example, we're just sending a success response
+    res.status(200).json({ message: 'User data stored successfully' });
+});
+
 app.post('/create-checkout-session', async (req, res) => {
-    const { name, email, phone, cardType } = req.body;
+    const { amount } = req.body;
 
     try {
         const session = await stripe.checkout.sessions.create({
@@ -54,82 +53,21 @@ app.post('/create-checkout-session', async (req, res) => {
                     price_data: {
                         currency: 'usd',
                         product_data: {
-                            name: 'Aurum Token',
+                            name: 'Aurum Tokens',
                         },
                         unit_amount: 100, // $1.00 in cents
                     },
-                    quantity: 100, // Minimum purchase of 100 tokens
+                    quantity: amount,
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL}/success`,
-            cancel_url: `${process.env.FRONTEND_URL}/cancel`,
-            customer_email: email,
-            metadata: {
-                name: name,
-                phone: phone,
-                cardType: cardType
-            }
+            success_url: `${req.headers.origin}/#home?payment=success`,
+            cancel_url: `${req.headers.origin}/#home?payment=cancelled`,
         });
 
         res.json({ id: session.id });
     } catch (error) {
-        console.error('Error creating checkout session:', error);
         res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/process-payment', async (req, res) => {
-    try {
-        const {token, name, email, phone} = req.body;
-
-        // Create a customer in Stripe
-        const customer = await stripe.customers.create({
-            source: token,
-            name: name,
-            email: email,
-            phone: phone
-        });
-
-        // Create a charge (you may want to adjust the amount)
-        const charge = await stripe.charges.create({
-            amount: 10000, // $100.00 in cents
-            currency: 'usd',
-            customer: customer.id,
-            description: 'Aurum Token Purchase'
-        });
-
-        // Store user data (encrypt sensitive information)
-        const user = {
-            name: name,
-            email: email,
-            phone: encryptData(phone),
-            customerId: customer.id,
-            createdAt: new Date()
-        };
-        users.push(user);
-
-        // Store payment data (encrypt sensitive information)
-        const payment = {
-            customerId: customer.id,
-            amount: charge.amount,
-            last4: charge.payment_method_details.card.last4,
-            createdAt: new Date()
-        };
-        payments.push(payment);
-
-        // Schedule deletion of payment data after 24 hours
-        setTimeout(() => {
-            const index = payments.findIndex(p => p.customerId === customer.id);
-            if (index !== -1) {
-                payments.splice(index, 1);
-            }
-        }, 24 * 60 * 60 * 1000);
-
-        res.json({success: true});
-    } catch (error) {
-        console.error('Error processing payment:', error);
-        res.status(500).json({success: false, error: error.message});
     }
 });
 
