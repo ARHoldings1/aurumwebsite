@@ -605,67 +605,6 @@
             </form>
         </div>
     </div>
-
-    <script>
-        const stripe = Stripe('pk_live_51Q2QcZP7rkV7R0EGJ6CizNwT17zSCCnQc3VvrHHzgPoYCtppPP8bag0CMC83VrEDwn7NYbeKVxivaBVem0bsmHQC00HCmaDFk7');
-        const form = document.getElementById('payment-form');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            // Collect form data
-            const formData = new FormData(form);
-            const userData = Object.fromEntries(formData.entries());
-
-            try {
-                // Send user data to your server
-                const userDataResponse = await fetch('/api/store-user-data', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userData),
-                });
-
-                if (!userDataResponse.ok) {
-                    throw new Error('Failed to store user data');
-                }
-
-                // Create Checkout Session
-                const response = await fetch('/create-checkout-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        amount: parseInt(document.getElementById('amount').value),
-                    }),
-                });
-
-                const { id } = await response.json();
-
-                // Redirect to Stripe Checkout
-                const { error } = await stripe.redirectToCheckout({ sessionId: id });
-
-                if (error) {
-                    console.error('Error:', error);
-                    alert('Payment failed: ' + error.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            }
-        });
-
-        // Check for payment status in URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const paymentStatus = urlParams.get('payment');
-        if (paymentStatus === 'success') {
-            alert('Payment successful! Thank you for purchasing Aurum.');
-        } else if (paymentStatus === 'cancelled') {
-            alert('Payment was cancelled.');
-        }
-
-        // Other existing functions
         const modal = document.getElementById("buyModal");
         const btn = document.getElementById("buyBtn");
         const span = document.getElementsByClassName("close")[0];
