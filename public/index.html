@@ -7,6 +7,7 @@
     <title>Aurum Cryptocurrency</title>
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root {
             --primary-color: #FFD700;
@@ -95,24 +96,18 @@
             padding: 2rem;
         }
         
-        #home {
-            text-align: left;
+        #home, #about, #roadmap {
             margin-bottom: 2rem;
         }
         
-        #home h2 {
+        #home h2, #about h2, #roadmap h2 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-        }
-        
-        #home p {
-            font-size: 1.2rem;
         }
         
         #about {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 2rem;
         }
         
         #about .logo {
@@ -124,168 +119,6 @@
         
         #about .content {
             flex: 1;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-        
-        #about h2 {
-            margin-top: 0;
-        }
-        
-        #about p {
-            margin-bottom: 0;
-        }
-        
-        button {
-            background-color: var(--secondary-color);
-            border: none;
-            color: var(--primary-color);
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        
-        button:hover {
-            background-color: #555;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.4);
-        }
-        
-        .modal-content {
-            background-color: var(--primary-color);
-            margin: 10% auto;
-            padding: 2rem;
-            border: 1px solid #888;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            border-radius: 5px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-logo {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1rem;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 1rem;
-        }
-        
-        .modal-button {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        
-        .modal-button:hover {
-            background-color: #555;
-        }
-        
-        #qrCode, #contractAddress {
-            display: none;
-            margin-top: 1rem;
-        }
-        
-        #qrCode img {
-            width: 250px;
-            height: 250px;
-            max-width: 100%;
-            height: auto;
-        }
-        
-        #contractAddress {
-            word-break: break-all;
-        }
-        
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .close:hover {
-            color: #000;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-        }
-        
-        @media (max-width: 1024px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            nav {
-                margin-top: 1rem;
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            nav ul {
-                margin-right: 0;
-            }
-            
-            h1 {
-                font-size: 1rem;
-                margin-top: 0.5rem;
-            }
-            
-            #about {
-                flex-direction: column;
-            }
-            
-            #about .logo {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-            
-            #about .content {
-                max-height: none;
-                overflow-y: visible;
-            }
-        }
-        
-        #roadmap {
-            background-color: #FFFFFF;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        
-        #roadmap h2 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--secondary-color);
         }
         
         .timeline {
@@ -345,12 +178,64 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
-        .content h3 {
-            margin-top: 0;
-            color: var(--secondary-color);
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
         }
         
-        @media screen and (max-width: 600px) {
+        .social-icons a {
+            color: var(--secondary-color);
+            font-size: 2rem;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: #555;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
+            
+            .header-button {
+                margin-top: 10px;
+            }
+            
+            #about {
+                flex-direction: column;
+            }
+            
+            #about .logo {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
             .timeline::after {
                 left: 31px;
             }
@@ -373,36 +258,126 @@
                 left: 0%;
             }
         }
+
+        /* Styles for the modal and payment form */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-logo {
+        width: 50px;
+        height: 50px;
+       margin-bottom: 1rem;
+       }
+        .modal-content {
+            background-color: var(--primary-color);
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+        }
         
-        .social-icons {
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        #payment-form {
+            display: none;
+        }
+        
+        .form-row {
+            margin-bottom: 1rem;
+        }
+        
+        .form-row label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-row input,
+        .form-row select {
+            width: 100%;
+            padding: 0.5rem;
+        }
+        
+        .card-element {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .modal-buttons {
             display: flex;
-            justify-content: center;
-            margin-top: 2rem;
+            justify-content: space-between;
+            margin-bottom: 1rem;
         }
         
-        .social-icons a {
-            color: var(--secondary-color);
-            font-size: 2rem;
-            margin: 0 1rem;
-            transition: color 0.3s ease;
+        .modal-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
         
-        .social-icons a:hover {
-            color: #555;
+        .modal-button:hover {
+            background-color: #555;
         }
         
-        @media (max-width: 480px) {
-            .modal-content {
-                padding: 1rem;
-            }
-
-            .modal-buttons {
-                flex-direction: column;
-            }
-
-            .modal-button {
-                margin-bottom: 0.5rem;
-            }
+        .submit-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        
+        .submit-button:hover {
+            background-color: #555;
+        }
+        
+        .phone-input {
+            display: flex;
+            align-items: center;
+        }
+        
+        .phone-input select {
+            margin-right: 0.5rem;
+        }
+        
+        .card-type {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .card-type label {
+            margin-right: 1rem;
         }
     </style>
 </head>
@@ -417,6 +392,7 @@
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#roadmap">Roadmap</a></li>
+                <li><a href="https://app.presentations.ai/view/jewK57" target="_blank">Whitepaper</a></li>
             </ul>
             <button id="buyBtn" class="header-button">Buy Aurum</button>
         </nav>
@@ -425,11 +401,9 @@
     <div class="container">
         <section id="home">
             <h2>Welcome to Aurum</h2>
-            <p>The future of savings and purchasing is here with Aurum, the gold-backed crypto stablecoin.Introducing Aurum—the first gold-backed cryptocurrency stablecoin from Baltic Tech! With each Aurum token (AUR) backed by real gold reserves, it offers a secure, stable way to invest in digital assets while preserving the timeless value of gold. This is your opportunity to diversify your portfolio and secure your wealth with a cryptocurrency that's as solid as gold itself.
-
-                Priced at just $1.00 per token, you can start investing today with a minimum purchase of 100 tokens. Whether you're looking to save for the future by staking your AUR tokens or want the flexibility to buy gold and jewelry across all Baltic Tech Group-owned stores, Aurum gives you the best of both worlds—real-world value and digital convenience.
-                
-                Don't miss out on this golden opportunity! Buy Aurum tokens today and enjoy the security and liquidity of a gold-backed cryptocurrency.</p>
+            <p>The future of savings and purchasing is here with Aurum, the gold-backed crypto stablecoin. Introducing Aurum—the first gold-backed cryptocurrency stablecoin from Baltic Tech! With each Aurum token (AUR) backed by real gold reserves, it offers a secure, stable way to invest in digital assets while preserving the timeless value of gold. This is your opportunity to diversify your portfolio and secure your wealth with a cryptocurrency that's as solid as gold itself.</p>
+            <p>Priced at just $1.00 per token, you can start investing today with a minimum purchase of 100 tokens. Whether you're looking to save for the future by staking your AUR tokens or want the flexibility to buy gold and jewelry across all Baltic Tech Group-owned stores, Aurum gives you the best of both worlds—real-world value and digital convenience.</p>
+            <p>Don't miss out on this golden opportunity! Buy Aurum tokens today and enjoy the security and liquidity of a gold-backed cryptocurrency.</p>
         </section>
 
         <section id="about">
@@ -485,21 +459,539 @@
             <div class="modal-buttons">
                 <button id="proceedBtn" class="modal-button">Proceed to Buy</button>
                 <button id="contractBtn" class="modal-button">Contract Address</button>
+                <button id="fiatBtn" class="modal-button">Buy $AUR with Card</button>
             </div>
-            <div id="qrCode">
+            <div id="qrCode" style="display: none;">
+                <h3>1 AUR = 1 USD</h3>
                 <img src="assets/qrcode.png" alt="Aurum QR Code">
-                <p>Scan this QR code to buy Aurum</p>
             </div>
-            <div id="contractAddress">
-                <p>0x6E97A67a160Bb259ee31d30908bC27A345BD3eA2</p>
+            <div id="contractAddress" style="display: none;">
+                <p>Contract Address: 0x6E97A67a160Bb259ee31d30908bC27A345BD3eA2</p>
                 <button id="copyBtn" class="modal-button">Copy Address</button>
             </div>
+            <form id="payment-form" style="display: none;">
+                <div class="form-row">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-row">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-row">
+                    <label for="phone">Phone Number</label>
+                    <div class="phone-input">
+                        <select id="country-code" name="country-code" required>
+                            <option value="">Select Country Code</option>
+                            <option value="+1">United States (+1)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+33">+33 (France)</option>
+                            <option value="+49">+49 (Germany)</option>
+                            <option value="+39">+39 (Italy)</option>
+                            <option value="+351">+351 (Portugal)</option>
+                            <option value="+352">+352 (Luxembourg)</option>
+                            <option value="+32">+32 (Belgium)</option>
+                            <option value="+31">+31 (Netherlands)</option>
+                            <option value="+45">+45 (Denmark)</option>
+                            <option value="+46">+46 (Sweden)</option>
+                            <option value="+47">+47 (Norway)</option>
+                            <option value="+48">+48 (Poland)</option>
+                            <option value="+43">+43 (Austria)</option>
+                            <option value="+41">+41 (Switzerland)</option>
+                            <option value="+358">+358 (Finland)</option>
+                            <option value="+354">+354 (Iceland)</option>
+                            <option value="+356">+356 (Malta)</option>
+                            <option value="+370">+370 (Lithuania)</option>
+                            <option value="+371">+371 (Latvia)</option>
+                            <option value="+372">+372 (Estonia)</option>
+                            <option value="+359">+359 (Bulgaria)</option>
+                            <option value="+387">+387 (Bosnia and Herzegovina)</option>
+                            <option value="+385">+385 (Croatia)</option>
+                            <option value="+386">+386 (Slovenia)</option>
+                            <option value="+381">+381 (Serbia)</option>
+                            <option value="+389">+389 (North Macedonia)</option>
+                            <option value="+373">+373 (Moldova)</option>
+                            <option value="+374">+374 (Armenia)</option>
+                            <option value="+972">+972 (Israel)</option>
+                            <option value="+966">+966 (Saudi Arabia)</option>
+                            <option value="+965">+965 (Kuwait)</option>
+                            <option value="+968">+968 (Oman)</option>
+                            <option value="+971">+971 (United Arab Emirates)</option>
+                            <option value="+964">+964 (Iraq)</option>
+                            <option value="+962">+962 (Jordan)</option>
+                            <option value="+963">+963 (Syria)</option>
+                            <option value="+970">+970 (Palestine)</option>
+                            <option value="+973">+973 (Bahrain)</option>
+                            <option value="+967">+967 (Yemen)</option>
+                            <option value="+960">+960 (Maldives)</option>
+                            <option value="+852">+852 (Hong Kong)</option>
+                            <option value="+853">+853 (Macau)</option>
+                            <option value="+886">+886 (Taiwan)</option>
+                            <option value="+86">+86 (China)</option>
+                            <option value="+81">+81 (Japan)</option>
+                            <option value="+82">+82 (South Korea)</option>
+                            <option value="+65">+65 (Singapore)</option>
+                            <option value="+60">+60 (Malaysia)</option>
+                            <option value="+63">+63 (Philippines)</option>
+                            <option value="+62">+62 (Indonesia)</option>
+                            <option value="+61">+61 (Australia)</option>
+                            <option value="+64">+64 (New Zealand)</option>
+                            <option value="+55">+55 (Brazil)</option>
+                            <option value="+52">+52 (Mexico)</option>
+                            <option value="+51">+51 (Peru)</option>
+                            <option value="+54">+54 (Argentina)</option>
+                            <option value="+53">+53 (Cuba)</option>
+                            <option value="+506">+506 (Costa Rica)</option>
+                            <option value="+507">+507 (Panama)</option>
+                            <option value="+503">+503 (El Salvador)</option>
+                            <option value="+502">+502 (Guatemala)</option>
+                            <option value="+504">+504 (Honduras)</option>
+                            <option value="+505">+505 (Nicaragua)</option>
+                            <option value="+509">+509 (Haiti)</option>
+                            <option value="+591">+591 (Bolivia)</option>
+                            <option value="+593">+593 (Ecuador)</option>
+                            <option value="+595">+595 (Paraguay)</option>
+                            <option value="+598">+598 (Uruguay)</option>
+                            <option value="+599">+599 (Netherlands Antilles)</option>
+                            <option value="+501">+501 (Belize)</option>
+                            <option value="+500">+500 (Falkland Islands)</option>
+                            <option value="+297">+297 (Aruba)</option>
+                            <option value="+290">+290 (Saint Helena)</option>
+                            <option value="+264">+264 (Namibia)</option>
+                            <option value="+263">+263 (Zimbabwe)</option>
+                            <option value="+260">+260 (Zambia)</option>
+                            <option value="+258">+258 (Mozambique)</option>
+                            <option value="+256">+256 (Uganda)</option>
+                            <option value="+255">+255 (Tanzania)</option>
+                            <option value="+254">+254 (Kenya)</option>
+                            <option value="+253">+253 (Djibouti)</option>
+                            <option value="+252">+252 (Somalia)</option>
+                        </select>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" name="card-number" required>
+                </div>
+                <div class="form-row">
+                    <label for="expiry">Expiration Date</label>
+                    <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
+                </div>
+                <div class="form-row">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" name="cvv" required>
+                </div>
+                <div class="form-row">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" name="amount" min="1" required>
+                </div>
+                <div class="form-row">
+                    <label for="card-type">Card Type</label>
+                    <div class="card-type">
+                        <label>
+                            <input type="radio" name="card-type" value="visa" required>
+                            <img src="assets/visa.png" alt="Visa" width="50">
+                        </label>
+                        <label>
+                            <input type="radio" name="card-type" value="mastercard" required>
+                            <img src="assets/mastercard.png" alt="Mastercard" width="50">
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">Submit Payment</button>
+            </form>
         </div>
     </div>
 
-    <footer>
-        &copy; Aurum | 2024 | All Rights Reserved
-    </footer>
+    <script>
+        // ... (rest of the code remains the same)
+    </script>
+</body>
+</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'; object-src 'self'">
+    <title>Aurum Cryptocurrency</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #333333;
+            --background-color: #FFFFFF;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background-color: var(--primary-color);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        nav ul li {
+            margin: 0 10px;
+        }
+        
+        nav ul li a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .header-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .header-button:hover {
+            background-color: #555;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        #home, #about, #roadmap {
+            margin-bottom: 2rem;
+        }
+        
+        #home h2, #about h2, #roadmap h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        #about {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        #about .logo {
+            width: 250px;
+            height: 250px;
+            margin-right: 2rem;
+            flex-shrink: 0;
+        }
+        
+        #about .content {
+            flex: 1;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: #FFFFFF;
+            border: 4px solid var(--secondary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .right::after {
+            left: -16px;
+        }
+        
+        .content {
+            padding: 20px 30px;
+            background-color: var(--primary-color);
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .social-icons a {
+            color: var(--secondary-color);
+            font-size: 2rem;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: #555;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
+            
+            .header-button {
+                margin-top: 10px;
+            }
+            
+            #about {
+                flex-direction: column;
+            }
+            
+            #about .logo {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 15px;
+            }
+            
+            .left::after, .right::after {
+                left: 15px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+
+        /* Styles for the modal and payment form */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-logo {
+        width: 100px;
+        height: 100px;
+       margin-bottom: 1rem;
+       }
+        .modal-content {
+            background-color: var(--primary-color);
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        #payment-form {
+            display: none;
+        }
+        
+        .form-row {
+            margin-bottom: 1rem;
+        }
+        
+        .form-row label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-row input,
+        .form-row select {
+            width: 100%;
+            padding: 0.5rem;
+        }
+        
+        .card-element {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .modal-button:hover {
+            background-color: #555;
+        }
+        
+        .submit-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        
+        .submit-button:hover {
+            background-color: #555;
+        }
+        
+        .phone-input {
+            display: flex;
+            align-items: center;
+        }
+        
+        .phone-input select {
+            margin-right: 0.5rem;
+        }
+        
+        .card-type {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .card-type label {
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body>
+    
 
     <script>
         const modal = document.getElementById("buyModal");
@@ -507,14 +999,14 @@
         const span = document.getElementsByClassName("close")[0];
         const proceedBtn = document.getElementById("proceedBtn");
         const contractBtn = document.getElementById("contractBtn");
+        const fiatBtn = document.getElementById("fiatBtn");
         const qrCode = document.getElementById("qrCode");
         const contractAddress = document.getElementById("contractAddress");
+        const paymentForm = document.getElementById("payment-form");
         const copyBtn = document.getElementById("copyBtn");
 
         btn.onclick = function() {
             modal.style.display = "block";
-            qrCode.style.display = "none";
-            contractAddress.style.display = "none";
         }
 
         span.onclick = function() {
@@ -530,11 +1022,19 @@
         proceedBtn.onclick = function() {
             qrCode.style.display = "block";
             contractAddress.style.display = "none";
+            paymentForm.style.display = "none";
         }
 
         contractBtn.onclick = function() {
-            contractAddress.style.display = "block";
             qrCode.style.display = "none";
+            contractAddress.style.display = "block";
+            paymentForm.style.display = "none";
+        }
+
+        fiatBtn.onclick = function() {
+            qrCode.style.display = "none";
+            contractAddress.style.display = "none";
+            paymentForm.style.display = "block";
         }
 
         copyBtn.onclick = function() {
@@ -545,6 +1045,38 @@
                 console.error('Could not copy text: ', err);
             });
         }
+
+        const stripe = Stripe('pk_live_51Q2QcZP7rkV7R0EGJ6CizNwT17zSCCnQc3VvrHHzgPoYCtppPP8bag0CMC83VrEDwn7NYbeKVxivaBVem0bsmHQC00HCmaDFk7');
+
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const { error } = await stripe.redirectToCheckout({
+                lineItems: [{
+                    price: 'price_1Q2S2WP7rkV7R0EGPF3MAm53', //PriceID at Stripe
+                    quantity: parseInt(document.getElementById('amount').value),
+                }],
+                mode: 'payment',
+                successUrl: window.location.origin + '/#home?payment=success',
+                cancelUrl: window.location.origin + '/#home?payment=cancelled',
+            });
+
+            if (error) {
+                console.error('Error:', error);
+                alert('Payment failed: ' + error.message);
+            }
+        });
+
+        // Check for payment status in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentStatus = urlParams.get('payment');
+        if (paymentStatus === 'success') {
+            alert('Payment successful! Thank you for purchasing Aurum.');
+        } else if (paymentStatus === 'cancelled') {
+            alert('Payment was cancelled.');
+        }
     </script>
 </body>
 </html>
+
