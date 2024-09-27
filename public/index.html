@@ -605,6 +605,10 @@
             </form>
         </div>
     </div>
+
+    <script>
+        const stripe = Stripe('pk_live_51Q2QcZP7rkV7R0EGJ6CizNwT17zSCCnQc3VvrHHzgPoYCtppPP8bag0CMC83VrEDwn7NYbeKVxivaBVem0bsmHQC00HCmaDFk7');
+        const form = document.getElementById('payment-form');
         const modal = document.getElementById("buyModal");
         const btn = document.getElementById("buyBtn");
         const span = document.getElementsByClassName("close")[0];
@@ -615,11 +619,6 @@
         const contractAddress = document.getElementById("contractAddress");
         const paymentForm = document.getElementById("payment-form");
         const copyBtn = document.getElementById("copyBtn");
-
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
 
         btn.onclick = function() {
             modal.style.display = "block";
@@ -662,25 +661,50 @@
             });
         }
 
-        const stripe = Stripe('pk_live_51Q2QcZP7rkV7R0EGJ6CizNwT17zSCCnQc3VvrHHzgPoYCtppPP8bag0CMC83VrEDwn7NYbeKVxivaBVem0bsmHQC00HCmaDFk7');
-
-        const form = document.getElementById('payment-form');
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const { error } = await stripe.redirectToCheckout({
-                lineItems: [{
-                    price: 'price_1Q2S2WP7rkV7R0EGPF3MAm53', //PriceID at Stripe
-                    quantity: parseInt(document.getElementById('amount').value),
-                }],
-                mode: 'payment',
-                successUrl: window.location.origin + '/#home?payment=success',
-                cancelUrl: window.location.origin + '/#home?payment=cancelled',
-            });
+            // Collect form data
+            const formData = new FormData(form);
+            const userData = Object.fromEntries(formData.entries());
 
-            if (error) {
+            try {
+                // Send user data to your server
+                const userDataResponse = await fetch('/api/store-user-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                if (!userDataResponse.ok) {
+                    throw new Error('Failed to store user data');
+                }
+
+                // Create Checkout Session
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: parseInt(document.getElementById('amount').value),
+                    }),
+                });
+                
+                const { id } = await response.json();
+
+                // Redirect to Stripe Checkout
+                const { error } = await stripe.redirectToCheckout({ sessionId: id });
+
+                if (error) {
+                    console.error('Error:', error);
+                    alert('Payment failed: ' + error.message);
+                }
+            } catch (error) {
                 console.error('Error:', error);
-                alert('Payment failed: ' + error.message);
+                alert('An error occurred. Please try again.');
             }
         });
 
@@ -693,59 +717,6 @@
             alert('Payment was cancelled.');
         }
     </script>
-     </div>
-
-     <script src="https://js.stripe.com/v3/"></script>
-     <script>
-         const stripe = Stripe('pk_live_51Q2QcZP7rkV7R0EGJ6CizNwT17zSCCnQc3VvrHHzgPoYCtppPP8bag0CMC83VrEDwn7NYbeKVxivaBVem0bsmHQC00HCmaDFk7');
-         const form = document.getElementById('payment-form');
-         form.addEventListener('submit', async (event) => {
-             event.preventDefault();
- 
-             // Collect form data
-             const formData = new FormData(form);
-             const userData = Object.fromEntries(formData.entries());
- 
-             try {
-                 // Send user data to your server
-                 const userDataResponse = await fetch('/api/store-user-data', {
-                     method: 'POST',
-                     headers: {
-                         'Content-Type': 'application/json',
-                     },
-                     body: JSON.stringify(userData),
-                 });
- 
-                 if (!userDataResponse.ok) {
-                     throw new Error('Failed to store user data');
-                 }
- 
-                 // Create Checkout Session
-                 const response = await fetch('/create-checkout-session', {
-                     method: 'POST',
-                     headers: {
-                         'Content-Type': 'application/json',
-                     },
-                     body: JSON.stringify({
-                         amount: parseInt(document.getElementById('amount').value),
-                     }),
-                 });
- 
-                 const { id } = await response.json();
- 
-                 // Redirect to Stripe Checkout
-                 const { error } = await stripe.redirectToCheckout({ sessionId: id });
- 
-                 if (error) {
-                     console.error('Error:', error);
-                     alert('Payment failed: ' + error.message);
-                 }
-             } catch (error) {
-                 console.error('Error:', error);
-                 alert('Payment failed: ' + error.message);
-             }
-         });
-     </script>
 </body>
 </html>
 
