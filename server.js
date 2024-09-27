@@ -5,10 +5,22 @@ const app = express();
 const crypto = require('crypto');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
+
+app.post('/api/store-user-data', (req, res) => {
+    const userData = req.body;
+    // Here, you would typically store the data in your database
+    console.log('Received user data:', userData);
+    
+    // For this example, we're just sending a success response
+    res.status(200).json({ message: 'User data stored successfully' });
+});
+
 
 // Rate limiting
 const limiter = rateLimit({
